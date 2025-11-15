@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần Mềm Quản Lý Khách Hàng</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px 0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .app-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-section {
+            width: 320px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .data-section {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            min-width: 0;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-reset {
+            background: #e74c3c;
+            margin-left: 10px;
+        }
+        
+        .btn-reset:hover {
+            background: #c0392b;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f1f8ff;
+        }
+        
+        .warranty-active {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .warranty-expired {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .warranty-expiring {
+            color: #f39c12;
+            font-weight: 600;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-edit, .btn-delete {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            border-radius: 3px;
+        }
+        
+        .btn-edit {
+            background: #f39c12;
+        }
+        
+        .btn-edit:hover {
+            background: #e67e22;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+        }
+        
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        
+        .search-box {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        
+        .search-box input {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .address-cell {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .notes-cell {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .warranty-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .warranty-period {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        .warranty-end {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid #e1e8ed;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+        
+        .stat-active {
+            color: #27ae60;
+        }
+        
+        .stat-expired {
+            color: #e74c3c;
+        }
+        
+        .stat-expiring {
+            color: #f39c12;
+        }
+        
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+        }
+        
+        .compact-form .form-group {
+            margin-bottom: 12px;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 100%;
+                padding: 15px;
+            }
+            
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                width: 100%;
+                position: static;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 1000px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .stat-card {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chăm Sóc Khách Hàng</h1>
+            <p class="subtitle">Quản lý thông tin khách hàng, sản phẩm và bảo hành</p>
+		<p class="subtitle">KBC STORE 68- ĐC: KHU MỞ RỘNG MỸ PHƯỚC 1-BẾN CÁT- BÌNH DƯƠNG</p>
+		<p class="subtitle">SDT: 0972.68.78.33 Zalo: 0972.54.95.15 TrườngKBC</p>
+        </header>
+        
+        <div class="app-container">
+            <section class="form-section compact-form">
+                <h2 class="section-title">Thêm Khách Hàng Mới</h2>
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label for="customerName">Tên Khách Hàng</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerAddress">Địa Chỉ</label>
+                        <input type="text" id="customerAddress" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Sản Phẩm Bán</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="price">Giá (VNĐ)</label>
+                            <input type="number" id="price" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="saleDate">Ngày Bán</label>
+                            <input type="date" id="saleDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="warrantyPeriod">Tháng BH</label>
+                            <input type="number" id="warrantyPeriod" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Ghi Chú</label>
+                        <textarea id="notes"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn">Lưu Thông Tin</button>
+                        <button type="reset" class="btn btn-reset">Làm Mới</button>
+                    </div>
+                </form>
+            </section>
+            
+            <section class="data-section">
+                <h2 class="section-title">Danh Sách Khách Hàng</h2>
+                
+                <div class="stats-container" id="statsContainer">
+                    <!-- Thống kê sẽ được thêm bằng JavaScript -->
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm khách hàng, địa chỉ, sản phẩm...">
+                    <button class="btn" id="searchBtn">Tìm Kiếm</button>
+                </div>
+                
+                <div class="table-container">
+                    <table id="customerTable">
+                        <thead>
+                            <tr>
+                                <th>Tên KH</th>
+                                <th>Địa Chỉ</th>
+                                <th>Sản Phẩm</th>
+                                <th>Giá</th>
+                                <th>Ngày Bán</th>
+                                <th>Trạng Thái BH</th>
+                                <th>Tháng BH</th>
+                                <th>Hết BH</th>
+                                <th>Ghi Chú</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerTableBody">
+                            <!-- Dữ liệu sẽ được thêm vào đây bằng JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Mảng lưu trữ thông tin khách hàng
+        let customers = JSON.parse(localStorage.getItem('customers')) || [];
+        
+        // Lấy các phần tử DOM
+        const customerForm = document.getElementById('customerForm');
+        const customerTableBody = document.getElementById('customerTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const statsContainer = document.getElementById('statsContainer');
+        
+        // Hàm tính ngày hết bảo hành
+        function calculateWarrantyEnd(saleDate, warrantyPeriod) {
+            const sale = new Date(saleDate);
+            const endDate = new Date(sale);
+            endDate.setMonth(sale.getMonth() + parseInt(warrantyPeriod));
+            return endDate.toISOString().split('T')[0];
+        }
+        
+        // Hàm kiểm tra trạng thái bảo hành
+        function getWarrantyStatus(warrantyEnd) {
+            const today = new Date();
+            const endDate = new Date(warrantyEnd);
+            const daysUntilExpiry = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (today > endDate) {
+                return { status: 'expired', days: daysUntilExpiry };
+            } else if (daysUntilExpiry <= 30) {
+                return { status: 'expiring', days: daysUntilExpiry };
+            } else {
+                return { status: 'active', days: daysUntilExpiry };
+            }
+        }
+        
+        // Hàm định dạng số tiền
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';
+        }
+        
+        // Hàm định dạng ngày
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN');
+        }
+        
+        // Hàm hiển thị thống kê
+        function displayStats() {
+            let activeCount = 0;
+            let expiringCount = 0;
+            let expiredCount = 0;
+            
+            customers.forEach(customer => {
+                const warrantyStatus = getWarrantyStatus(customer.warrantyEnd);
+                if (warrantyStatus.status === 'active') {
+                    activeCount++;
+                } else if (warrantyStatus.status === 'expiring') {
+                    expiringCount++;
+                } else {
+                    expiredCount++;
+                }
+            });
+            
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Tổng số KH</div>
+                    <div class="stat-value">${customers.length}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Đang bảo hành</div>
+                    <div class="stat-value stat-active">${activeCount}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Sắp hết BH</div>
+                    <div class="stat-value stat-expiring">${expiringCount}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Hết bảo hành</div>
+                    <div class="stat-value stat-expired">${expiredCount}</div>
+                </div>
+            `;
+        }
+        
+        // Hàm hiển thị danh sách khách hàng
+        function displayCustomers(customerList = customers) {
+            customerTableBody.innerHTML = '';
+            
+            if (customerList.length === 0) {
+                customerTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Không có dữ liệu khách hàng</td></tr>';
+                return;
+            }
+            
+            customerList.forEach((customer, index) => {
+                const warrantyStatus = getWarrantyStatus(customer.warrantyEnd);
+                const statusClass = `warranty-${warrantyStatus.status}`;
+                
+                let statusText = '';
+                if (warrantyStatus.status === 'active') {
+                    statusText = 'Còn BH';
+                } else if (warrantyStatus.status === 'expiring') {
+                    statusText = `Sắp hết (${warrantyStatus.days} ngày)`;
+                } else {
+                    statusText = 'Hết BH';
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.name}</td>
+                    <td class="address-cell" title="${customer.address}">${customer.address}</td>
+                    <td>${customer.product}</td>
+                    <td>${formatPrice(customer.price)}</td>
+                    <td>${formatDate(customer.saleDate)}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>${customer.warrantyPeriod} tháng</td>
+                    <td>${formatDate(customer.warrantyEnd)}</td>
+                    <td class="notes-cell" title="${customer.notes}">${customer.notes || 'Không có'}</td>
+                    <td class="actions">
+                        <button class="btn btn-edit" onclick="editCustomer(${index})">Sửa</button>
+                        <button class="btn btn-delete" onclick="deleteCustomer(${index})">Xóa</button>
+                    </td>
+                `;
+                customerTableBody.appendChild(row);
+            });
+        }
+        
+        // Hàm thêm khách hàng mới
+        function addCustomer(event) {
+            event.preventDefault();
+            
+            const customerName = document.getElementById('customerName').value;
+            const customerAddress = document.getElementById('customerAddress').value;
+            const productName = document.getElementById('productName').value;
+            const price = document.getElementById('price').value;
+            const saleDate = document.getElementById('saleDate').value;
+            const warrantyPeriod = document.getElementById('warrantyPeriod').value;
+            const notes = document.getElementById('notes').value;
+            
+            const warrantyEnd = calculateWarrantyEnd(saleDate, warrantyPeriod);
+            
+            const newCustomer = {
+                name: customerName,
+                address: customerAddress,
+                product: productName,
+                price: price,
+                saleDate: saleDate,
+                warrantyPeriod: warrantyPeriod,
+                warrantyEnd: warrantyEnd,
+                notes: notes
+            };
+            
+            customers.push(newCustomer);
+            localStorage.setItem('customers', JSON.stringify(customers));
+            
+            displayCustomers();
+            displayStats();
+            customerForm.reset();
+            document.getElementById('saleDate').valueAsDate = new Date();
+            
+            alert('Thêm khách hàng thành công!');
+        }
+        
+        // Hàm xóa khách hàng
+        function deleteCustomer(index) {
+            if (confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) {
+                customers.splice(index, 1);
+                localStorage.setItem('customers', JSON.stringify(customers));
+                displayCustomers();
+                displayStats();
+            }
+        }
+        
+        // Hàm sửa khách hàng
+        function editCustomer(index) {
+            const customer = customers[index];
+            
+            document.getElementById('customerName').value = customer.name;
+            document.getElementById('customerAddress').value = customer.address;
+            document.getElementById('productName').value = customer.product;
+            document.getElementById('price').value = customer.price;
+            document.getElementById('saleDate').value = customer.saleDate;
+            document.getElementById('warrantyPeriod').value = customer.warrantyPeriod;
+            document.getElementById('notes').value = customer.notes;
+            
+            // Xóa khách hàng cũ và cập nhật với thông tin mới
+            customers.splice(index, 1);
+            localStorage.setItem('customers', JSON.stringify(customers));
+            displayCustomers();
+            displayStats();
+        }
+        
+        // Hàm tìm kiếm khách hàng
+        function searchCustomers() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredCustomers = customers.filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm) || 
+                customer.product.toLowerCase().includes(searchTerm) ||
+                customer.address.toLowerCase().includes(searchTerm) ||
+                (customer.notes && customer.notes.toLowerCase().includes(searchTerm))
+            );
+            
+            displayCustomers(filteredCustomers);
+        }
+        
+        // Thiết lập ngày mặc định là ngày hôm nay
+        document.getElementById('saleDate').valueAsDate = new Date();
+        
+        // Gán sự kiện
+        customerForm.addEventListener('submit', addCustomer);
+        searchBtn.addEventListener('click', searchCustomers);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                searchCustomers();
+            }
+        });
+        
+        // Hiển thị danh sách khách hàng và thống kê khi tải trang
+        displayCustomers();
+        displayStats();
+    </script>
+</body>
+</html>
